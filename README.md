@@ -59,6 +59,7 @@ var tree = [
     imgClass: "icon",
     icon: "fa fa-folder",
     expanded: true,
+    noclick: true,                       // prevents href and collapse handlers
     nodes: [
       {
         text: "Sub Node 1",
