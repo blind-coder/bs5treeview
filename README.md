@@ -57,6 +57,7 @@ var tree = [
     text: "Node 1",
     icon: "fa fa-folder",
     expanded: true,
+    noclick: true,                       // prevents href and collapse handlers
     nodes: [
       {
         text: "Sub Node 1",

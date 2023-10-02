@@ -20,7 +20,8 @@
             expandClass: 'show',
             indent: 1.25,
             parentsMarginLeft: '1.25rem',
-            openNodeLinkOnNewTab: true
+            openNodeLinkOnNewTab: true,
+            noclick: false
 
         };
     /**
@@ -72,7 +73,18 @@
             $(this.element).on('click', '.list-group-item', function (e) {
                 $('.state-icon', this)
                     .toggleClass(_this.settings.expandIcon)
-                    .toggleClass(_this.settings.collapseIcon);
+                    .toggleClass(_this.settings.collapseIcon)
+		    .on("click", function(){
+		         $(this)
+			    .toggleClass(_this.settings.expandIcon)
+			    .toggleClass(_this.settings.collapseIcon);
+                        // Toggle the data-bs-target. Issue with Bootstrap toggle and dynamic code
+                        $($(_this).attr("data-bs-target")).collapse('toggle');
+		    });
+		if (e.target.hasAttribute("data-noclick")){
+			e.preventDefault();
+			return false;
+		}
                 // navigate to href if present
                 if (e.target.hasAttribute('href')) {
                     if (_this.settings.openNodeLinkOnNewTab) {
@@ -144,6 +156,11 @@
                 }
                 // Set node Text.
                 treeItem.append(node.text);
+
+		// Set hint to prevent default click handler
+		if (node.noclick){
+			treeItem.attr('data-noclick', "true");
+		}
                 // Reset node href if present
                 if (node.href) {
                     treeItem.attr('href', node.href);
