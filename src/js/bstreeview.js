@@ -22,7 +22,6 @@
             parentsMarginLeft: '1.25rem',
             openNodeLinkOnNewTab: true,
             noclick: false
-
         };
     /**
      * bstreeview HTML templates.
@@ -70,17 +69,23 @@
             var _this = this;
             this.build($(this.element), this.tree, 0);
             // Update angle icon on collapse
+            $(this.element).on('click', '.state-icon', function(e){
+                $(this)
+                    .toggleClass(_this.settings.expandIcon)
+                    .toggleClass(_this.settings.collapseIcon);
+                    // Toggle the data-bs-target. Issue with Bootstrap toggle and dynamic code
+                $($(this).parent().attr("data-bstreeview-target")).collapse('toggle');
+                e.preventDefault();
+                return false;
+            });
             $(this.element).on('click', '.list-group-item', function (e) {
+		if (e.target.hasAttribute("data-noclick")){
+			e.preventDefault();
+			return false;
+		}
                 $('.state-icon', this)
                     .toggleClass(_this.settings.expandIcon)
-                    .toggleClass(_this.settings.collapseIcon)
-		    .on("click", function(){
-		         $(this)
-			    .toggleClass(_this.settings.expandIcon)
-			    .toggleClass(_this.settings.collapseIcon);
-                        // Toggle the data-bs-target. Issue with Bootstrap toggle and dynamic code
-                        $($(_this).attr("data-bs-target")).collapse('toggle');
-		    });
+                    .toggleClass(_this.settings.collapseIcon);
 		if (e.target.hasAttribute("data-noclick")){
 			e.preventDefault();
 			return false;
@@ -96,8 +101,8 @@
                 }
                 else
                 {
-                    // Toggle the data-bs-target. Issue with Bootstrap toggle and dynamic code
-                    $($(this).attr("data-bs-target")).collapse('toggle');
+                    // Toggle the data-bstreeview-target. Issue with Bootstrap toggle and dynamic code
+                    $($(this).attr("data-bstreeview-target")).collapse('toggle');
                 }
             });
         },
@@ -139,7 +144,7 @@
             $.each(nodes, function addNodes(id, node) {
                 // Main node element.
                 var treeItem = $(templates.treeviewItem)
-                    .attr('data-bs-target', "#" + _this.itemIdPrefix + node.nodeId)
+                    .attr('data-bstreeview-target', "#" + _this.itemIdPrefix + node.nodeId)
                     .attr('style', 'padding-left:' + leftPadding)
                     .attr('aria-level', depth);
                 // Set Expand and Collapse icones.
